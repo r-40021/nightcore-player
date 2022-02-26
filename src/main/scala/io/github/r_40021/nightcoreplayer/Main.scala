@@ -2,6 +2,7 @@ package io.github.r_40021.nightcoreplayer
 
 import io.github.r_40021.nightcoreplayer.SizeConstants._
 import javafx.application.Application
+import javafx.beans.value.ObservableValue
 import javafx.collections.FXCollections
 import javafx.event.EventHandler
 import javafx.scene.Scene
@@ -13,6 +14,8 @@ import javafx.scene.media.MediaView
 import javafx.scene.paint.Color
 import javafx.stage.Stage
 import javafx.util.Callback
+
+import javax.script.Bindings
 
 object Main extends App {
   Application.launch(classOf[Main], args: _*)
@@ -58,16 +61,18 @@ class Main extends Application {
       }
     })
 
+    tableView.visibleProperty().bind(primaryStage.fullScreenProperty().not())
+    tableView.managedProperty().bind(primaryStage.fullScreenProperty().not())
     tableView.getColumns.setAll(fileNameColumn, timeColumn, deleteActionColumn)
 
-    val toolBar = ToolbarCreator.create(mediaView, tableView, timeLabel, primaryStage)
-
     val baseBorderPane = new BorderPane()
+    val scene = new Scene(baseBorderPane, mediaViewFitWidth + tableMinWidth, mediaViewFitHeight + toolBarMinHeight)
+    val toolBar = ToolbarCreator.create(mediaView, tableView, timeLabel, scene, primaryStage)
     baseBorderPane.setStyle("-fx-background-color: Black")
     baseBorderPane.setCenter(mediaView)
     baseBorderPane.setBottom(toolBar)
     baseBorderPane.setRight(tableView)
-    val scene = new Scene(baseBorderPane, mediaViewFitWidth + tableMinWidth, mediaViewFitHeight + toolBarMinHeight)
+
     scene.setFill(Color.BLACK)
     mediaView.fitWidthProperty().bind(scene.widthProperty().subtract(tableMinWidth))
     mediaView.fitHeightProperty().bind(scene.heightProperty().subtract(toolBarMinHeight))

@@ -55,4 +55,10 @@ object MoviePlayer {
 
   def playNext(tableView: TableView[Movie], mediaView: MediaView, timeLabel: Label): Unit =
     playAt(Next, tableView, mediaView, timeLabel)
+
+  def playForward(mediaView: MediaView, msec: Int): Unit = {
+    mediaView.getMediaPlayer.seek(
+      mediaView.getMediaPlayer.getCurrentTime.add(new Duration(msec))
+    )
+  }
 }
